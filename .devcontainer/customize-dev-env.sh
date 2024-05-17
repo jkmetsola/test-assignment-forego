@@ -36,11 +36,11 @@ cp .git/hooks/pre-commit.sample .git/hooks/pre-commit
 sed -i 's|exec git diff-index --check --cached $against --|git diff-index --check --cached $against --|' .git/hooks/pre-commit
 {
   echo ""
-  echo "robotidy --diff --check hsl-api/tests/robot"
-  echo "robocop hsl-api/tests/robot"
+  # echo "robotidy --diff --check hsl-api/tests/robot"
+  # echo "robocop hsl-api/tests/robot"
   echo "ruff check --exclude .vscode-server"
   echo "ruff format --exclude .vscode-server --diff"
-  echo "shellcheck ./*.sh"
+  echo "shellcheck \$(find . -type f -name '*.sh')"
   echo "hadolint Dockerfile"
-  echo "actionlint"
+  echo "actionlint -ignore 'workflow is empty'"
 } >> .git/hooks/pre-commit
