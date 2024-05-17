@@ -1,0 +1,50 @@
+{
+	"name": "Dev Environment",
+	"build": {
+		"dockerfile": "${localWorkspaceFolder}/Dockerfile",
+		"context": "${localWorkspaceFolder}",
+		"args": {
+			"HOST_DOCKER_GID": "999", // Obtain with 'getent group docker | cut -d: -f3'
+			"HOST_UID": "1000", // Obtain with 'id -u'
+			"HOST_GID": "1000" // Obtain with 'id -g'
+		}
+	},
+	"workspaceFolder": "/dev-env/${localWorkspaceFolderBasename}",
+	"mounts": [
+		"source=${localWorkspaceFolder},target=/dev-env/${localWorkspaceFolderBasename},type=bind",
+		"source=${localWorkspaceFolder}/.vscode-server,target=/root/.vscode-server,type=bind",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=/home/${localEnv:USER}/.ssh,target=/home/devroot/.ssh,type=bind"
+	],
+	"updateRemoteUserUID": false,
+	"remoteUser": "devroot",
+	"initializeCommand": "./.devcontainer/initscript.sh",
+	"containerUser": "devroot",
+	"onCreateCommand": "./.devcontainer/customize-dev-env.sh",
+	"postAttachCommand": {
+		"command1": "pip-compile -U --no-strip-extras requirements.in > /dev/null 2>&1",
+		"command2": "pip-compile -U --no-strip-extras requirements-dev.in > /dev/null 2>&1"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"charliermarsh.ruff",
+				"christian-kohler.path-intellisense",
+				"codezombiech.gitignore",
+				"eamodio.gitlens",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				//"NicolasVuillamy.vscode-groovy-lint",
+				//"SonarSource.sonarlint-vscode",
+				"timonwong.shellcheck",
+				"exiasr.hadolint",
+				"ms-azuretools.vscode-docker",
+				//"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"redhat.vscode-yaml",
+				//"robocorp.robotframework-lsp",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
+			]
+		}
+	}
+}
